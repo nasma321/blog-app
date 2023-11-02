@@ -59,12 +59,12 @@
                     <input type="hidden" name="id" id="id">
                     <div class="form-group">
                         <label for="title">Title</label>
-                        <input type="text" name="title" id="title" class="form-control">
+                        <input type="text" name="title" id="title" class="form-control" required>
                     </div>
 
                     <div class="form-group">
                         <label for="content">Content</label>
-                        <textarea name="content" id="content" rows="100" cols="80"></textarea>
+                        <textarea name="content" id="content" rows="100" cols="80" required></textarea>
                     </div>
 
                 </form>
@@ -99,32 +99,42 @@
 
         $('#addNewBlog').click(function () {
             $('#editBlog').trigger("reset");
+            $('#content').summernote('code', '');
             $('#blogModel').modal('show');
+            $('#blogModelTitle').html("Add Blog");
         });
 
+
         $('body').on('click', '#saveBlog', function (event) {
+            event.preventDefault();
+
             var id = $("#id").val();
             var title = $("#title").val();
             var content = $("#content").val();
 
-            $("#saveBlog").html('Please Wait...');
-            $("#saveBlog"). attr("disabled", true);
-         
-            $.ajax({
-                type:"POST",
-                url: "{{ url('blogs') }}",
-                data: {
-                    id:id,
-                    title:title,
-                    content:content,
-                },
-                dataType: 'json',
-                success: function(res){
-                    window.location.reload();
-                    $("#saveBlog").html('Save');
-                    $("#saveBlog"). attr("disabled", false);
-                }
-            });
+            // Check if the title and content fields are not empty
+            if (title.trim() === "" || content.trim() === "") {
+                alert("Title and Content are required fields.");
+            } else {
+                $("#saveBlog").html('Please Wait...');
+                $("#saveBlog").attr("disabled", true);
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('blogs') }}",
+                    data: {
+                        id: id,
+                        title: title,
+                        content: content,
+                    },
+                    dataType: 'json',
+                    success: function (res) {
+                        window.location.reload();
+                        $("#saveBlog").html('Save');
+                        $("#saveBlog").attr("disabled", false);
+                    }
+                });
+            }
         });
 
         $('body').on('click', '#view', function(event){
