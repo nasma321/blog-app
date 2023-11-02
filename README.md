@@ -41,13 +41,13 @@ This is a simple CRUD (Create, Read, Update, Delete) system for blog posts. User
     php artisan key:generate
     ```
 
-    - Migrate and seed the database:
+    - Run migration:
 
     ```bash
     php artisan migrate
     ```
 
-5. **tart the development server:**
+5. **Start the development server:**
 
     ```bash
     php artisan serve
