@@ -84,6 +84,38 @@
             });
         });
 
+        $('body').on('click', '#saveBlog', function (event) {
+            event.preventDefault();
+
+            var id = $("#id").val();
+            var title = $("#title").val();
+            var content = $("#content").val();
+
+            // Check if the title and content fields are not empty
+            if (title.trim() === "" || content.trim() === "") {
+                alert("Title and Content are required fields.");
+            } else {
+                $("#saveBlog").html('Please Wait...');
+                $("#saveBlog").attr("disabled", true);
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('blogs') }}",
+                    data: {
+                        id: id,
+                        title: title,
+                        content: content,
+                    },
+                    dataType: 'json',
+                    success: function (res) {
+                        window.location.reload();
+                        $("#saveBlog").html('Save');
+                        $("#saveBlog").attr("disabled", false);
+                    }
+                });
+            }
+        });
+        
         $('body').on('click', '#delete', function () {
             if (confirm("Delete Record?") == true) {
                 var id = $(this).data('id'); 
@@ -93,7 +125,7 @@
                     data: { id: id },
                     dataType: 'json',
                     success: function(res){
-                        window.location.reload();
+                        window.location.href = "/blogs";
                     }
                 });
             }
